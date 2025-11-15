@@ -1,0 +1,754 @@
+{
+  "name": "lab linux",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "/verification/exceeded_limit.txt",
+        "options": {
+          "append": true
+        }
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        2432,
+        -400
+      ],
+      "id": "ae26f921-2d3f-41c1-aa11-483f89105cb3",
+      "name": "Запись о превышении лимита",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "jsCode": "// Получаем данные из предыдущего узла\nlet all = $input.first().json.all;\n\n// Проверка: если не массив — делаем пустой\nif (!Array.isArray(all)) {\n  all = [];\n}\n\n// ФИО текущего студента\nconst fio = $('Имя студента').first().json.fio;\nif (!fio) throw new Error(\"ФИО студента не указано\");\n\n// Текущее время в нужном формате YYYY-MM-DD HH:MM:SS\nconst now = new Date();\nconst pad = (n) => n.toString().padStart(2, '0');\nconst formattedNow = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;\n\n// Находим студента по ФИО\nlet student = all.find(s => s[\"ФИО\"] === fio);\nif (!student) throw new Error(`Студент \"${fio}\" не найден в базе`);\n\n// Ищем первую пустую попытку (от 1 до 10)\nlet filled = false;\nfor (let i = 1; i <= 10; i++) {\n  const key = i.toString();\n  if (!student[key] || student[key].trim() === \"\") {\n    student[key] = formattedNow;\n    filled = true;\n    break;\n  }\n}\n// Возвращаем объект с ключом \"all\"\nreturn [{ json: { all } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3328,
+        -560
+      ],
+      "id": "3c38e203-60b7-4996-8981-0c68770e1204",
+      "name": "дата"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $('похожие файлы').first().json.stdout;\n\n// Преобразуем строку в массив объектов\nconst files = JSON.parse(raw);\n\n// Извлекаем имена файлов\nconst names = files.map(f => {\n  return f.path.split('/').pop().replace('.txt', '');\n});\n\n// Склеиваем в строку через запятую\nconst result = names.join(', ');\n\n\n// Получаем данные из предыдущего узла\nlet all = $('Анализ отчета').first().json.all\n\n// ФИО текущего студента\nconst fio = $('Имя студента').first().json.fio;\nif (!fio) throw new Error(\"ФИО студента не указано\");\n\n// Текущее время в нужном формате YYYY-MM-DD HH:MM:SS\nconst now = new Date();\nconst pad = (n) => n.toString().padStart(2, '0');\nconst formattedNow = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;\n\n// Находим студента по ФИО\nlet student = all.find(s => s[\"ФИО\"] === fio);\nif (!student) throw new Error(`Студент \"${fio}\" не найден в базе`);\n\n// Ищем первую пустую попытку (от 1 до 10)\nfor (let i = 1; i <= 10; i++) {\n  const key = i.toString();\n  if (!student[key] || student[key].trim() === \"\") {\n    student[key] = 'сдано ' + formattedNow;\n    student[\"похожие файлы\"] = result;\n    break;\n  }\n}\n// Возвращаем объект с ключом \"all\"\nreturn [{ json: { all } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3328,
+        -752
+      ],
+      "id": "af8fe073-1fd3-4c12-9011-d3ac252a95f6",
+      "name": "отметка и дата"
+    },
+    {
+      "parameters": {
+        "command": "=node - \"{{ $('Имя студента').item.json.full }}.txt\" <<'EOF'\nconst fs = require('fs');\nconst path = '/verification/histories';\nconst name = process.argv[2]; // имя файла, например \"Дога Кристина.txt\"\n\ntry {\n  const filePath = `${path}/${name}`;\n  if (!fs.existsSync(filePath)) {\n    throw new Error(`Файл не найден: ${filePath}`);\n  }\n\n  // Берём строки 19–29 включительно\n  const lines = fs.readFileSync(filePath, 'utf8')\n    .split('\\n')\n    .slice(19, 30)\n    .join('\\n');\n\n  // Ищем похожие файлы\n  const sim = fs.readdirSync(path)\n    .filter(f => f !== name)\n    .filter(f => fs.readFileSync(`${path}/${f}`, 'utf8').includes(lines))\n    .map(f => `${path}/${f}`);\n\n  // Добавляем сам файл текущего студента в начало\n  const files = [`${path}/${name}`, ...sim];\n\n  // Возвращаем массив объектов в stdout\n  console.log(JSON.stringify(files.map(f => ({ path: f }))));\n} catch (e) {\n  console.error(JSON.stringify({ error: e.message }));\n  process.exit(1);\n}\nEOF\n"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        2208,
+        -752
+      ],
+      "id": "fecab2f6-b38d-413a-91df-b737765f3433",
+      "name": "похожие файлы"
+    },
+    {
+      "parameters": {
+        "jsCode": "const path = $input.first().json.path || '';\nconst full = path\n  .replace('/verification/reports/', '')\n  .replace('.txt', '')\n  .trim();\n\nif (!full) {\n  throw new Error('Не удалось извлечь имя файла');\n}\n\n// Разделяем по первому пробелу\nconst [group, ...fioParts] = full.split(' ');\nconst fio = fioParts.join(' ').trim();\nconst groupTrimmed = group ? group.trim() : '';\n\nreturn [{\n  json: {\n    fio,\n    group: groupTrimmed,\n    full\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        192,
+        -560
+      ],
+      "id": "30bbeb50-3110-443d-b0cc-e31daa69eb6b",
+      "name": "Имя студента"
+    },
+    {
+      "parameters": {
+        "operation": "fromJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        640,
+        -560
+      ],
+      "id": "c3e78d38-8d26-46dd-8c05-ad8064940460",
+      "name": "Извлекаем из него данные"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/verification/all_students.json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        416,
+        -560
+      ],
+      "id": "c73fde87-0a84-484f-b957-276332d80c63",
+      "name": "читаем all_students.json"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/verification/exceeded_limit.txt",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        1312,
+        -400
+      ],
+      "id": "327c3efa-a35e-46c8-88f7-d736eb8f98b2",
+      "name": "читаем exceeded_limit"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1536,
+        -400
+      ],
+      "id": "e0a665a8-cfb7-4fd8-a3dd-609f11a9a667",
+      "name": "Извлекаем данные"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "9b6200e5-6543-4a74-aa7a-27f43ca04421",
+              "leftValue": "={{ $json.data }}",
+              "rightValue": "={{ $('Имя студента').item.json.fio }}",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1760,
+        -400
+      ],
+      "id": "c2899d38-1281-4384-809d-e915fdeef37d",
+      "name": "Студент ещё не превышал лимит?"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: {\n      error: \"студент \" + $('Имя студента').first().json.fio + \" использовал все 10 попыток\\n\"\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1984,
+        -400
+      ],
+      "id": "7a814395-e26d-4756-9911-d22b057f717d",
+      "name": "Формируем строку"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "error",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        2208,
+        -400
+      ],
+      "id": "c8de4e14-3b51-46ee-a2e4-6f3f0f0cd8ae",
+      "name": "конвертируем"
+    },
+    {
+      "parameters": {
+        "fileSelector": "={{ $('Триггер: изменение/добавление файла').first().json.path }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        1312,
+        -656
+      ],
+      "id": "977edaa0-fc68-49f4-afc2-93fd96e1a09f",
+      "name": "читаем reports"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "3fbf7e0b-c223-4162-9b0d-68e10c91357a",
+              "leftValue": "={{ $json.tryLeft }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1088,
+        -560
+      ],
+      "id": "5e572bf0-3bac-450f-8bd6-f521f01202f4",
+      "name": "Ещё в рамках лимита?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "06008303-67e1-417a-a0d9-5a913fad085f",
+              "leftValue": "={{ $json.passed }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1984,
+        -656
+      ],
+      "id": "1c48c81b-6c6a-4731-928c-e4ed4ab497e6",
+      "name": "Сдано?"
+    },
+    {
+      "parameters": {
+        "jsCode": "let all = Array.isArray($input.first().json.data)\n  ? $input.first().json.data\n  : [];\n\nconst fio = $('Имя студента').first().json.fio;\nconst group = $('Имя студента').first().json.group;\n\n// Ищем или создаём запись студента\nlet student = all.find(s => s[\"ФИО\"] === fio);\nif (!student) {\n  student = { \"ФИО\": fio };\n  for (let i = 1; i <= 10; i++) student[i.toString()] = \"\";\n  student[\"Группа\"] = group;\n  student[\"Похожие файлы\"] = [];\n  all.push(student);\n}\n\n// Считаем использованные попытки\nlet used = 0;\nfor (let i = 1; i <= 10; i++) {\n  if (student[i] && student[i].trim() !== \"\") used++;\n}\n\nconst tryLeft = 10 - used;\n\nreturn [{ json: { fio, tryLeft, all } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        864,
+        -560
+      ],
+      "id": "f70a6cd2-d659-4260-b311-435dff4dcd51",
+      "name": "Поиск или добавление студента"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1536,
+        -656
+      ],
+      "id": "1f61150b-1122-4ffb-bd70-34172a34e065",
+      "name": "Извлечение данных"
+    },
+    {
+      "parameters": {
+        "jsCode": "const text = $input.item.json.data || '';\nconst all = $('Поиск или добавление студента').first().json.all\nconst passed = text.toLowerCase().includes('лабораторная сдана без ошибок');\nreturn [{ json: { fio: $('Имя студента').first().json.fio, passed, all } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        -656
+      ],
+      "id": "5cb4eb4d-c8d0-4b60-acd8-d1f25c1f9421",
+      "name": "Анализ отчета"
+    },
+    {
+      "parameters": {
+        "triggerOn": "folder",
+        "path": "/verification/reports",
+        "events": [
+          "add",
+          "change"
+        ],
+        "options": {
+          "depth": 2
+        }
+      },
+      "type": "n8n-nodes-base.localFileTrigger",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        -560
+      ],
+      "id": "88955e2f-72bf-4ed3-b25d-1ba14352f4fa",
+      "name": "Триггер: изменение/добавление файла"
+    },
+    {
+      "parameters": {
+        "fromEmail": "n8n.lab@yandex.ru",
+        "toEmail": "doga-tina.123@yandex.ru",
+        "subject": "n8n Лабы по linux",
+        "html": "=Студент {{ $('Имя студента').item.json.fio }} не уложился в 10 попыток",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        2656,
+        -400
+      ],
+      "id": "2f6b6e61-b303-4e58-931f-307faddf426a",
+      "name": "Отправляем отчет преподавателю",
+      "webhookId": "82c3cafc-2cc0-4130-8a5c-d8274b0661db",
+      "credentials": {
+        "smtp": {
+          "id": "cS4mmkDO4GAtw6bC",
+          "name": "SMTP n8n.lab"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fileSelector": "={{ $json.path }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        2656,
+        -752
+      ],
+      "id": "8db662c3-6e2e-4641-878f-3292701b868e",
+      "name": "Чтение файлов"
+    },
+    {
+      "parameters": {
+        "jsCode": "// берем stdout из первого входного item\nconst raw = $input.first().json.stdout || '[]';\n\n// иногда stdout содержит лишние переводы строки вокруг — безопасно подрезаем\nconst trimmed = raw.trim();\n\nlet files;\ntry {\n  files = JSON.parse(trimmed);\n} catch (e) {\n  throw new Error('Не удалось распарсить stdout как JSON: ' + e.message + '\\nstdout: ' + trimmed);\n}\n\n// ожидаем массив объектов { path: '/path/to/file' }\nif (!Array.isArray(files)) {\n  throw new Error('Ожидался массив, получили: ' + typeof files);\n}\n\n// Фильтруем пустые и приводим к строкам\nfiles = files\n  .map(f => (f && f.path) ? { path: String(f.path) } : null)\n  .filter(Boolean);\n\nif (files.length === 0) {\n  throw new Error('Список файлов пуст');\n}\n\n// Возвращаем по одному item на файл — Read/Write Files from Disk их подхватит\nreturn files.map(f => ({ json: f }));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2432,
+        -752
+      ],
+      "id": "3c8e7c2b-e2ca-4427-a7c7-531aca20333a",
+      "name": "Разбиение данных о похожих файлах"
+    },
+    {
+      "parameters": {
+        "jsCode": "const newItem = {\n  json: {},\n  binary: {}\n};\n\nconst attachmentNames = [];\n\nitems.forEach((item, index) => {\n  const name = `file${index+1}`;\n  newItem.binary[name] = item.binary.data;\n  attachmentNames.push(name);\n});\n\nnewItem.json.attachmentsList = attachmentNames.join(',');\nreturn [newItem];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2880,
+        -752
+      ],
+      "id": "f2d045c9-a288-4e66-b801-cf2876ed0ab5",
+      "name": "Объединение данных о похожих файлах"
+    },
+    {
+      "parameters": {
+        "fromEmail": "n8n.lab@yandex.ru",
+        "toEmail": "doga-tina.123@yandex.ru",
+        "subject": "n8n Лабы по linux",
+        "emailFormat": "text",
+        "text": "=Студент {{ $('Имя студента').first().json.fio }} сдал лабораторную работу.\nОставшихся попыток: {{ $('Ещё в рамках лимита?').first().json.tryLeft - 1 }}\nПрилагаются:\n1 Файл с историей команд студента {{ $('Имя студента').first().json.fio }}\n2 Файлы историй с похожим содержимым, если таковые нашлись",
+        "options": {
+          "appendAttribution": true,
+          "attachments": "={{ $json.attachmentsList }}"
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        3104,
+        -752
+      ],
+      "id": "6eefd718-e111-4a53-b854-42ec6dcd65a8",
+      "name": "Отправка отчета преподавателю",
+      "webhookId": "82c3cafc-2cc0-4130-8a5c-d8274b0661db",
+      "credentials": {
+        "smtp": {
+          "id": "cS4mmkDO4GAtw6bC",
+          "name": "SMTP n8n.lab"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "all",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        3552,
+        -656
+      ],
+      "id": "7503c5d1-0f7c-4548-8da4-35a934337f75",
+      "name": "конвертируем в файл"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "/verification/all_students.json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        3776,
+        -656
+      ],
+      "id": "7463ec36-797b-4b8c-9be8-de2deb19c87e",
+      "name": "перезаписываем all_students.json"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "дата": {
+      "main": [
+        [
+          {
+            "node": "конвертируем в файл",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "отметка и дата": {
+      "main": [
+        [
+          {
+            "node": "конвертируем в файл",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "похожие файлы": {
+      "main": [
+        [
+          {
+            "node": "Разбиение данных о похожих файлах",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Имя студента": {
+      "main": [
+        [
+          {
+            "node": "читаем all_students.json",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Запись о превышении лимита": {
+      "main": [
+        [
+          {
+            "node": "Отправляем отчет преподавателю",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Извлекаем из него данные": {
+      "main": [
+        [
+          {
+            "node": "Поиск или добавление студента",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "читаем all_students.json": {
+      "main": [
+        [
+          {
+            "node": "Извлекаем из него данные",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "читаем exceeded_limit": {
+      "main": [
+        [
+          {
+            "node": "Извлекаем данные",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Извлекаем данные": {
+      "main": [
+        [
+          {
+            "node": "Студент ещё не превышал лимит?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Студент ещё не превышал лимит?": {
+      "main": [
+        [
+          {
+            "node": "Формируем строку",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Формируем строку": {
+      "main": [
+        [
+          {
+            "node": "конвертируем",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "конвертируем": {
+      "main": [
+        [
+          {
+            "node": "Запись о превышении лимита",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "читаем reports": {
+      "main": [
+        [
+          {
+            "node": "Извлечение данных",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ещё в рамках лимита?": {
+      "main": [
+        [
+          {
+            "node": "читаем reports",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "читаем exceeded_limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Сдано?": {
+      "main": [
+        [
+          {
+            "node": "похожие файлы",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "дата",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Поиск или добавление студента": {
+      "main": [
+        [
+          {
+            "node": "Ещё в рамках лимита?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Извлечение данных": {
+      "main": [
+        [
+          {
+            "node": "Анализ отчета",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Анализ отчета": {
+      "main": [
+        [
+          {
+            "node": "Сдано?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Триггер: изменение/добавление файла": {
+      "main": [
+        [
+          {
+            "node": "Имя студента",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Отправляем отчет преподавателю": {
+      "main": [
+        []
+      ]
+    },
+    "Чтение файлов": {
+      "main": [
+        [
+          {
+            "node": "Объединение данных о похожих файлах",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Разбиение данных о похожих файлах": {
+      "main": [
+        [
+          {
+            "node": "Чтение файлов",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Объединение данных о похожих файлах": {
+      "main": [
+        [
+          {
+            "node": "Отправка отчета преподавателю",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Отправка отчета преподавателю": {
+      "main": [
+        [
+          {
+            "node": "отметка и дата",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "конвертируем в файл": {
+      "main": [
+        [
+          {
+            "node": "перезаписываем all_students.json",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "460c8c65-e78b-4f05-807f-50ad63f7c0d2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "cd6007d2328d9b1a3333547bfac96a50fbb1d4d232f62fc5d8b38233c6f91e5d"
+  },
+  "id": "JfSN40MoBfr2cpgP",
+  "tags": []
+}

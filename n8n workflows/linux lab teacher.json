@@ -1,0 +1,203 @@
+{
+  "name": "linux lab teacher",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 2.1,
+      "position": [
+        -1728,
+        400
+      ],
+      "id": "2454eaa9-da60-4662-8e83-8275e5275a38",
+      "name": "Триггер (IMAP): письмо на настроенную почту",
+      "credentials": {
+        "imap": {
+          "id": "gb56CRzg50sH6wLD",
+          "name": "IMAP n8n.lab"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f114a971-0308-46c4-8567-2a42d463e056",
+              "leftValue": "={{ $json.textHtml }}",
+              "rightValue": "Сводка",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "6faa9f3d-027e-48a0-977b-07faf2ef65dc",
+              "leftValue": "={{ $json.from }}",
+              "rightValue": "doga-tina.123@yandex.ru",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1504,
+        400
+      ],
+      "id": "9664951a-1259-41e1-924c-bb9a077bb087",
+      "name": "Проверка отправителя и содержимого"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/verification/all_students.json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -1280,
+        400
+      ],
+      "id": "41b8cfd1-ad58-4c8e-8799-b29d2da743fe",
+      "name": "читаем all_students.json"
+    },
+    {
+      "parameters": {
+        "operation": "fromJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -1056,
+        400
+      ],
+      "id": "96973432-bad1-49fc-b0dd-12100f83170c",
+      "name": "Извлекаем из него данные"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Получаем входной JSON\nconst data = $input.first().json.data; // если весь массив в одном item\n\nif (!Array.isArray(data)) {\n  throw new Error(\"Ожидается массив объектов\");\n}\n\n// Получаем заголовки (ключи из первого объекта)\nconst headers = Object.keys(data[0]);\n\n// Формируем CSV строки\nconst csvRows = [];\n\n// Заголовки\ncsvRows.push(headers.join(\",\"));\n\n// Данные\nfor (const row of data) {\n  const values = headers.map(h => {\n    let val = row[h] ?? \"\";\n    if (typeof val === \"string\" && (val.includes(\",\") || val.includes('\"'))) {\n      val = `\"${val.replace(/\"/g, '\"\"')}\"`;\n    }\n    return val;\n  });\n  csvRows.push(values.join(\",\"));\n}\n\n// Добавляем BOM для корректного открытия в Excel и других программах\nconst csvString = \"\\uFEFF\" + csvRows.join(\"\\n\");\n\n// Возвращаем как бинарный файл для n8n\nreturn [\n  {\n    json: {},\n    binary: {\n      data: {\n        data: Buffer.from(csvString, \"utf8\").toString(\"base64\"),\n        mimeType: \"text/csv\",\n        fileName: \"students.csv\"\n      }\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -832,
+        400
+      ],
+      "id": "a7581a6b-3bd7-4010-9b6c-286a6b5e2d14",
+      "name": "Конвертируем в csv"
+    },
+    {
+      "parameters": {
+        "fromEmail": "n8n.lab@yandex.ru",
+        "toEmail": "doga-tina.123@yandex.ru",
+        "subject": "n8n Лабы по linux",
+        "emailFormat": "text",
+        "text": "Сводка по всем студентам",
+        "options": {
+          "attachments": "data"
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        -608,
+        400
+      ],
+      "id": "f5232ed9-ae72-4163-b247-f9ca62719ad1",
+      "name": "Отправить отчет преподавателю",
+      "webhookId": "82c3cafc-2cc0-4130-8a5c-d8274b0661db",
+      "credentials": {
+        "smtp": {
+          "id": "cS4mmkDO4GAtw6bC",
+          "name": "SMTP n8n.lab"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Триггер (IMAP): письмо на настроенную почту": {
+      "main": [
+        [
+          {
+            "node": "Проверка отправителя и содержимого",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Проверка отправителя и содержимого": {
+      "main": [
+        [
+          {
+            "node": "читаем all_students.json",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "читаем all_students.json": {
+      "main": [
+        [
+          {
+            "node": "Извлекаем из него данные",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Извлекаем из него данные": {
+      "main": [
+        [
+          {
+            "node": "Конвертируем в csv",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Конвертируем в csv": {
+      "main": [
+        [
+          {
+            "node": "Отправить отчет преподавателю",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "3750cb3b-54c8-469f-aa2d-7b4464b47491",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "cd6007d2328d9b1a3333547bfac96a50fbb1d4d232f62fc5d8b38233c6f91e5d"
+  },
+  "id": "wVdrWzZAAoAXAhda",
+  "tags": []
+}

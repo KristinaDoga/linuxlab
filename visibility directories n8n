@@ -1,0 +1,8 @@
+В /opt/beget/n8n/docker-compose.yml  прописать
+volumes:
+	...
+    - /home/admeen/verification:/verification
+
+Далее
+chmod 770 /home/admeen/verification
+docker-compose -f /opt/beget/n8n/docker-compose.yml up -d

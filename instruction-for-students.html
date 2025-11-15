@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Инструкция: подготовка к лабораторной</title>
+  <style>
+    :root {
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --accent: #0f62fe;
+      --muted: #6b7280;
+      --danger: #b91c1c
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #eef2ff 0%, var(--bg) 100%);
+      color: #0f172a;
+      font-size: 16px;
+    }
+
+    .wrap {
+      max-width: 900px;
+      margin: 48px auto;
+      padding: 24px
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 6px 24px rgba(12, 20, 40, 0.06)
+    }
+
+    header {
+      display: flex;
+      gap: 16px;
+      align-items: center
+    }
+
+    h1 {
+      font-size: 20px;
+      margin: 0
+    }
+
+    p.lead {
+      color: var(--muted);
+      margin: 8px 0 18px
+    }
+
+    ol.steps {
+      padding-left: 18px
+    }
+
+    li.step {
+      margin-bottom: 18px
+    }
+
+    .code {
+      background: #0b1220;
+      color: #e6eef8;
+      padding: 12px;
+      border-radius: 8px;
+      font-family: SFMono-Regular, Menlo, Monaco, monospace;
+      overflow: auto
+    }
+
+    .cmd {
+      display: flex;
+      gap: 8px;
+      align-items: center
+    }
+
+    button.copy {
+      background: transparent;
+      border: 1px solid rgba(15, 20, 42, 0.06);
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: pointer
+    }
+
+    .note {
+      background: #fff9db;
+      border-left: 4px solid #f59e0b;
+      padding: 12px;
+      border-radius: 6px;
+      color: #92400e
+    }
+
+    .danger {
+      background: #fff0f0;
+      border-left: 4px solid var(--danger);
+      padding: 12px;
+      border-radius: 6px;
+      color: var(--danger)
+    }
+
+    footer {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 13px
+    }
+
+    .small {
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+
+    @media (max-width:520px) {
+      .wrap {
+        padding: 16px;
+        margin: 20px auto
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="card">
+      <header>
+        <div>
+          <h1>Подготовка окружения для лабораторной работы</h1>
+          <p class="lead">Краткая инструкция</p>
+        </div>
+      </header>
+
+      <main>
+        <ol class="steps">
+          <li class="step">
+            <strong>Поместите файл <code>client.sh</code> в домашний каталог.</strong>
+            <div class="small">(обычно <code>~</code> или <code>/home/&lt;ваш_пользователь&gt;</code>)</div>
+          </li>
+
+          <li class="step">
+            <strong>Откройте терминал в домашнем каталоге.</strong>
+            <div class="small">Убедитесь, что текущая директория именно <code><b>~</b></code>.</div>
+          </li>
+
+          <li class="step">
+            <strong>Выполните команды для подготовки и запуска скрипта:</strong>
+            <div class="small"> Вставить команду в терминал можно через <code><b>Control + Shift + V</b></code> или
+              <code><b>Shift + Insert</b></code>
+            </div>
+
+            <div style="margin-top:8px" class="cmd">
+              <div style="flex:1">
+                <div class="code" id="cmd1">sudo chmod +x client.sh</div>
+              </div>
+              <button class="copy" data-target="cmd1" title="Скопировать">Копировать</button>
+            </div>
+            <div class="small"> Для выполнения этой команды нужен пароль</div>
+            <div style="margin-top:8px" class="cmd">
+              <div style="flex:1">
+                <div class="code" id="cmd2">sudo ./client.sh</div>
+              </div>
+              <button class="copy" data-target="cmd2" title="Скопировать">Копировать</button>
+            </div>
+
+            <div class="small" style="margin-top:10px">Далее следуйте подсказкам скрипта:</div>
+            <ul class="small">
+              <li>Придумайте пароль и введите его дважды — это пароль для пользователя <strong>linuxoid</strong>.</li>
+              <li>Введите ваше <strong>Имя и Фамилию </strong> кириллицей через пробел, с заглавной буквы.
+              </li>
+              <li>Укажите номер группы.</li>
+            </ul>
+          </li>
+
+          <li class="step">
+            <strong>Переключитесь на пользователя <code>linuxoid</code>:</strong>
+            <div class="cmd" style="margin-top:8px">
+              <div style="flex:1">
+                <div class="code" id="cmd3">su - linuxoid</div>
+              </div>
+              <button class="copy" data-target="cmd3">Копировать</button>
+            </div>
+            <div class="small">Введите пароль, заданный ранее. После этого вы будете работать от имени
+              <code>linuxoid</code>.
+            </div>
+          </li>
+
+          <li class="step">
+            <strong>Примените настройки окружения:</strong>
+            <div class="cmd" style="margin-top:8px">
+              <div style="flex:1">
+                <div class="code" id="cmd4">source ~/.bashrc</div>
+              </div>
+              <button class="copy" data-target="cmd4">Копировать</button>
+            </div>
+            <div class="small">Рабочий каталог для лабораторной: <code>~/worklab</code></div>
+          </li>
+        </ol>
+
+        <div class="note" style="margin-top:14px">
+          <strong>Важно:</strong>
+          <div style="margin-top:6px">После выхода из терминала, завершения работы или перезагрузки, изменения
+            сохраняются. Чтобы продолжить работу снова, выполните:
+            <div class="cmd" style="margin-top:8px">
+              <div style="flex:1">
+                <div class="code" id="cmd5">su - linuxoid</div>
+              </div>
+              <button class="copy" data-target="cmd3">Копировать</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="danger" style="margin-top:14px">
+          <strong>Проверка:</strong>
+          <div style="margin-top:6px">Вы успешно вошли, если в приглашении терминала перед курсором отображается:</div>
+          <div class="code" style="margin-top:8px">linuxoid@&lt;устройство&gt;:~$</div>
+          <div class="small" style="margin-top:8px">Обязательно убедитесь, что все команды выполняются от имени
+            пользователя <strong>linuxoid</strong>.</div>
+        </div>
+
+        <section style="margin-top:18px">
+          <h3 style="margin:0 0 8px">Отправка лабораторной на проверку</h3>
+
+          <div class="cmd" style="margin-top:8px">
+            <div style="flex:1">
+              <div class="code" id="cmd6">labserver --send-lab</div>
+            </div>
+            <button class="copy" data-target="cmd3">Копировать</button>
+          </div>
+          <div style="margin-top:8px" class="small">Выполните эту команду из любого каталога от имени пользователя
+            <strong>linuxoid</strong>.
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // Кнопки копирования
+    document.querySelectorAll('button.copy').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-target');
+        const el = document.getElementById(id);
+        if (!el) return;
+        const text = el.textContent;
+        navigator.clipboard?.writeText(text).then(() => {
+          btn.textContent = 'Скопировано';
+          setTimeout(() => btn.textContent = 'Копировать', 1200);
+        }).catch(() => {
+          // fallback
+          const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); btn.textContent = 'Скопировано'; } catch (e) { btn.textContent = 'Ошибка' } ta.remove(); setTimeout(() => btn.textContent = 'Копировать', 1200);
+        })
+      })
+    })
+  </script>
+</body>
+
+</html>
