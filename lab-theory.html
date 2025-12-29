@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Команды Linux — полный структурированный конспект</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #222;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            font-size: 16px;
+        }
+
+        p,
+        a,
+        code,
+        li {
+
+            font-size: 16px;
+        }
+
+        .wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            background: #2c3e50;
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 6px;
+        }
+
+        h3 {
+            color: #2c3e50;
+        }
+
+        section {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+        }
+
+        article {
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+            margin-bottom: 30px;
+        }
+
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 12px;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+
+        code {
+            color: #e67e22;
+        }
+
+        ul {
+            margin-left: 20px;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #f39c12;
+            padding: 10px;
+            margin: 15px 0;
+        }
+
+        .note {
+            background: #e8f4fd;
+            border-left: 4px solid #3498db;
+            padding: 10px;
+            margin: 15px 0;
+        }
+
+        h4 {
+            font-size: 20px;
+        }
+
+        /* Заголовок-аккордеон */
+        .accordion-header {
+            cursor: pointer;
+            position: relative;
+            padding-left: 26px;
+            user-select: none;
+        }
+
+        /* Стрелка */
+        .accordion-header::before {
+            content: "▶";
+            position: absolute;
+            left: 0;
+            top: 0;
+            transition: transform 0.2s ease;
+        }
+
+        /* Открытое состояние */
+        .accordion-header[data-open="true"]::before {
+            content: "▼";
+        }
+
+        /* Скрываемый контент */
+        .accordion-content {
+            display: none;
+            margin-top: 10px;
+        }
+
+        /* Показ */
+        .accordion-content.open {
+            display: block;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="wrapper">
+
+        <h1>Команды Linux</h1>
+
+        <section>
+            <h2>1. Навигация по файловой системе</h2>
+
+            <article aria-label="whoami">
+                <h3>Вывести имя пользователя</h3>
+                <h4>whoami</h4>
+                <p><strong>Синтаксис:</strong></p>
+                <pre>whoami [ПАРАМЕТРЫ]</pre>
+                <p> Возможные значения <code>[ПАРАМЕТРЫ]</code> можно посмотреть, введя в терминале: whoami --help </p>
+                <p><strong>Пример использования:</strong></p>
+                <pre>whoami</pre>
+            </article>
+
+            <article aria-label="pwd">
+                <h3>Вывести полный путь текущего каталога</h3>
+                <h4>pwd</h4>
+                <p><strong>Синтаксис:</strong></p>
+                <pre>pwd [ПАРАМЕТРЫ]</pre>
+                <p>
+                    Возможные значения <code>[ПАРАМЕТРЫ]</code> можно посмотреть, введя в терминале: pwd --help
+                </p>
+
+                <p><strong>Пример использования:</strong></p>
+                <pre>pwd</pre>
+            </article>
+
+            <article aria-label="cd">
+                <h3>
+                    Сменить текущий каталог на указанный</h3>
+                <h4>cd</h4>
+                <p><strong>Синтаксис:</strong></p>
+                <pre>cd [ПАРАМЕТРЫ] [ПУТЬ]</pre>
+                <p>
+                    Возможные значения <code>[ПАРАМЕТРЫ]</code> можно посмотреть, введя в терминале: cd --help
+                </p>
+                <p><code>[ПУТЬ]</code> — путь к каталогу, который нужно сделать текущим.</p>
+                <p>
+                    Возможные значения <code>[ПУТЬ]</code>:
+                </p>
+                <ul>
+                    <li><code>~</code> — домашний каталог пользователя</li>
+                    <li><code>..</code> — каталог уровнем выше</li>
+                    <li><code>/path/to/catalog</code> — абсолютный путь</li>
+                    <li><code>path/to/catalog</code> — относительный путь</li>
+                </ul>
+
+
+                </p>
+                <p><strong>Примеры использования:</strong></p>
+                <pre>
+cd ~
+cd ..
+cd /etc
+cd path/to/catalog
+</pre>
+            </article>
+
+            <article aria-label="ls">
+                <h3>Вывести список файлов и каталогов</h3>
+                <h4>ls</h4>
+                <p><strong>Синтаксис:</strong></p>
+                <pre>ls [ПАРАМЕТРЫ] [ФАЙЛ]</pre>
+
+
+                <p>Возможные значения <code>[ПАРАМЕТРЫ]</code>:</p>
+                <ul>
+                    <li><code>-a</code>, <code>--all</code> — показывать скрытые файлы</li>
+                    <li><code>-i</code>, <code>--inode</code> — показывать inode</li>
+                    <li><code>-l</code> — подробный вывод</li>
+                    <li><code>-R</code>, <code>--recursive</code> — рекурсивный вывод</li>
+                </ul>
+                <p><em>Здесь приведены не все параметры. Подробнее: ls --help</em></p>
+                <p><code>[ФАЙЛ]</code> — путь к файлу или каталогу, содержимое которого нужно отобразить. По умолчанию
+                    выводится содержимое текущего каталога.
+                </p>
+                <p><strong>Примеры использования:</strong></p>
+                <pre>
+ls
+ls -al
+ls -liaR /path/to/catalog
+</pre>
+            </article>
+        </section>
+
+
+
+        <!-- 2 -->
+        <section>
+            <h2>2. Основные действия с файлами и каталогами</h2>
+
+            <section>
+                <h2>Создание</h2>
+                <article aria-label="mkdir">
+                    <h3>Создать каталог</h3>
+                    <h4>mkdir</h4>
+                    <p><strong>Синтаксис:</strong></p>
+                    <pre>mkdir [ПАРАМЕТРЫ] КАТАЛОГ</pre>
+                    <p>Возможные значения <code>[ПАРАМЕТРЫ]</code>:</p>
+                    <ul>
+                        <li><code>-p</code>, <code>--parents</code> — не выдавать ошибку, если существует; создавать
+                            родительские каталоги при необходимости
+                        </li>
+                    </ul>
+                    <p><em>Здесь приведены не все параметры. Подробнее: mkdir --help</em></p>
+                    <p><code>КАТАЛОГ</code> — путь к каталогу, который нужно создать.
+                    </p>
+                    <p><strong>Примеры использования:</strong></p>
+                    <pre>
+    mkdir mycatalog
+    mkdir -p ~/test/mycatalog
+    </pre>
+                </article>
+
+                <article aria-label="touch">
+                    <h3>Создать файл</h3>
+                    <h4>touch</h4>
+                    <p><strong>Синтаксис:</strong></p>
+                    <pre>touch [ПАРАМЕТРЫ] ФАЙЛ</pre>
+                    <p>
+                        Возможные значения <code>[ПАРАМЕТРЫ]</code> можно посмотреть, введя в терминале: touch --help
+                    </p>
+                    <p><code>ФАЙЛ</code> — имя файла, который нужно создать. Также можно прописывать и полное имя
+                        файла.
+                    </p>
+                    <p><strong>Примеры использования:</strong></p>
+                    <pre>
+    touch myfile
+    touch path/to/catalog/myfile
+    </pre>
+                </article>
+
+            </section>
+            <section>
+                <h2>Редактирование</h2>
+                <article aria-label="echo">
+                    <h3>Вывести текст на экран</h3>
+                    <h4>echo</h4>
+
+                    <p><strong>Синтаксис:</strong></p>
+                    <pre>echo [ПАРАМЕТРЫ] [ТЕКСТ]</pre>
+                    <p>
+                        Возможные значения <code>[ПАРАМЕТРЫ]</code>:
+                    </p>
+                    <ul>
+                        <li><code>-n</code> — не добавлять в конец вывода перевод на новую строку.</li>
+                        <li><code>-e</code> — включить интерпретацию управляющих последовательностей (\n, \t)</li>
+                    </ul>
+                    <p><em>Здесь приведены не все параметры. Подробнее: info echo (для выхода нажмите q)</em></p>
+                    <p><code>[ТЕКСТ]</code> — непосредственно та информация в текстовом виде, которую нужно вывести.
+                    </p>
+                    <p><strong>Пример использования:</strong></p>
+                    <pre>echo "Hello"</pre>
+                </article>
+
+                <article aria-label="cat">
+                    <h3>Вывести содержимое файла</h3>
+                    <h4>cat</h4>
+                    <p><strong>Синтаксис:</strong></p>
+                    <pre>cat [ПАРАМЕТРЫ] [ФАЙЛ]</pre>
+                    <p>
+                        Возможные значения <code>[ПАРАМЕТРЫ]</code> можно посмотреть, введя в терминале: cat --help
+                    </p>
+                    <p><code>[ФАЙЛ]</code> — путь к файлу, содержимое которого нужно вывести.</p>
+                    <p><strong>Примеры использования:</strong></p>
+                    <pre>
+cat file.txt
+cat a.txt >> b.txt
+</pre>
+                </article>
+
+                <article aria-label="less">
+                    <h3>Постраничный просмотр файлов</h3>
+                    <h4>less</h4>
+                    <p><strong>Синтаксис:</strong></p>
+                    <pre>less [ПАРАМЕТРЫ] ФАЙЛ</pre>
+                    <p>
+                        Возможные значения <code>[ПАРАМЕТРЫ]</code> можно посмотреть, введя в терминале: less --help
+                    </p>
+                    <p><code>ФАЙЛ</code> — путь к файлу, содержимое которого нужно вывести.</p>
+                    <p><strong>Пример использования:</strong></p>
+                    <pre>less path/to/catalog/myfile.txt</pre>
+                </article>
+
+                <article aria-label="nano">
+
+                    <h3>Консольный текстовый редактор <b>nano</b></h3>
+                    <h4>nano</h4>
+                    <p><b>nano</b> — консольный текстовый редактор, который подходит для редактирования конфигурационных
+                        файлов, написания скриптов.</p>
+                    <p><strong>Синтаксис:</strong></p>
+                    <pre>nano [ПАРАМЕТРЫ] ФАЙЛ</pre>
+                    <p>
+                        Возможные значения <code>[ПАРАМЕТРЫ]</code>:
+                    </p>
+                    <ul>
+                        <li><code>-i</code> — включает автоотступы</li>
+                        <li><code>-l</code> — включает номера строк</li>
+                        <li><code>-v</code> — открывает файл только чтение</li>
+                    </ul>
+                    <p><em>Здесь приведены не все параметры. Подробнее: nano --help</em></p>
+                    <p><code>ФАЙЛ</code> — путь к файлу, с которым нужно работать (отредактировать, просмотреть и т.
+                        д.).</p>
+
+                    <p><strong>Примеры использования:</strong></p>
+                    <pre>
+nano file.txt
+nano /etc/hosts
+</pre>
+                    <div class="nano-hotkeys">
+                        <div>Горячие клавиши</div>
+
+                        <h5>Передвижение</h5>
+                        <ul>
+                            <li><strong>← / →</strong> — перемещение по символам влево и вправо</li>
+                            <li><strong>↑ / ↓</strong> — переход между строками</li>
+                            <li><strong>Ctrl + A</strong> — переход в начало текущей строки</li>
+                            <li><strong>Ctrl + E</strong> — переход в конец текущей строки</li>
+                            <li><strong>Ctrl + Y</strong> — прокрутка страницы вверх</li>
+                            <li><strong>Ctrl + V</strong> — прокрутка страницы вниз</li>
+                            <li><strong>Ctrl + C</strong> — показать позицию курсора (строка, столбец, процент файла)
+                            </li>
+                        </ul>
+
+                        <h5>Редактирование</h5>
+                        <ul>
+                            <li><strong>Ctrl + K</strong> — вырезать текущую строку</li>
+                            <li><strong>Ctrl + U</strong> — вставить вырезанный текст</li>
+                            <li><strong>Ctrl + J</strong> — выравнивание текста (форматирование абзаца)</li>
+                            <li><strong>Ctrl + T</strong> — вызов справки и дополнительных команд поиска</li>
+                        </ul>
+
+                        <h5>Сохранение</h5>
+                        <ul>
+                            <li><strong>Ctrl + O</strong> — сохранить файл (Nano предложит имя файла)</li>
+                        </ul>
+
+                        <h5>Выход</h5>
+                        <ul>
+                            <li><strong>Ctrl + X</strong> — выйти из редактора (при изменениях будет запрошено
+                                подтверждение)</li>
+                        </ul>
+                    </div>
+
+                </article>
+            </section>
+            <section>
+                <h2>Перенаправление вывода</h2>
+
+                <article aria-label=">">
+                    <h3>Перенаправить вывод в файл с перезаписью</h3>
+
+                    <h4>&gt;</h4>
+                    <p><strong>Синтаксис:</strong></p>
+                    <pre>КОМАНДА > ФАЙЛ</pre>
+                    <p><code>КОМАНДА</code> — любая команда, которая в результате выводит текстовую информацию
+                        (например,
+                        cat или echo).</p>
+                    <p><code>ФАЙЛ</code> — путь к файлу, в который нужно вывести информацию. Если файла нет — он будет
+                        создан. </p>
+                    <p><strong>Пример использования:</strong></p>
+                    <pre>echo "Hello" > file.txt</pre>
+                </article>
+
+                <article aria-label=">>">
+                    <h3>Добавить вывод в конец файла</h3>
+
+                    <h4>&gt;&gt;</h4>
+                    <p><strong>Синтаксис:</strong></p>
+                    <pre>КОМАНДА >> ФАЙЛ</pre>
+                    <p><code>КОМАНДА</code> — любая команда, которая в результате выводит текстовую информацию
+                        (например,
+                        cat или echo).</p>
+                    <p>>> — выходные данные записываются в конец файла. Существующие содержимое файла не стирается. Если
+                        файла
+                        нет — он будет создан.</p>
+                    <p><code>[ФАЙЛ]</code> — путь к файлу, в который нужно вывести информацию. Если файла нет — он будет
+                        создан. </p>
+                    <p><strong>Пример использования:</strong></p>
+                    <pre>echo "Hello" >> file.txt</pre>
+                </article>
+            </section>
+
+            <section>
+                <h2>Копирование/перемещение/переименование</h2>
+
+                <article aria-label="cp">
+                    <h3>Скопировать файл или каталог</h3>
+                    <h4>cp</h4>
+                    <p><strong>Синтаксис:</strong></p>
+                    <pre>cp [ПАРАМЕТРЫ] ИСТОЧНИК НАЗНАЧЕНИЕ</pre>
+                    <p>
+                        Возможные значения <code>[ПАРАМЕТРЫ]</code>:
+                    </p>
+                    <ul>
+
+                        <li><code>--R</code>,<code> -r</code>, <code>--recursive</code> — рекурсивно копировать каталоги
+                            и
+                            их содержимое.</li>
+                    </ul>
+                    <p><em>Здесь приведены не все параметры. Подробнее: cp --help</em></p>
+                    <p><code>ИСТОЧНИК</code> — путь к файлу или каталогу, который нужно скопировать.</p>
+                    <p><code>НАЗНАЧЕНИЕ</code> — путь к каталогу, в который нужно скопировать данные.</p>
+                    <p><strong>Примеры использования:</strong></p>
+                    <pre>
+cp path/to/catalog/myfile.txt path/to/catalog2
+cp -r path/to/catalog path/to/catalog
+</pre>
+                </article>
+
+                <article aria-label="mv">
+                    <h3>Переместить/переименовать файл или каталог</h3>
+                    <h4>mv</h4>
+                    <p><strong>Синтаксис:</strong></p>
+                    <pre>mv [ПАРАМЕТРЫ] ИСТОЧНИК НАЗНАЧЕНИЕ</pre>
+                    <p>
+                        Возможные значения <code>[ПАРАМЕТРЫ]</code> можно посмотреть, введя в терминале: mv --help
+                    </p>
+                    <p><code>ИСТОЧНИК</code> — путь к файлу или каталогу, который нужно переместить.</p>
+                    <p><code>НАЗНАЧЕНИЕ</code> — путь к каталогу, в который нужно переместить данные.</p>
+                    <p><strong>Примеры использования:</strong></p>
+                    <pre>
+mv file.txt dir/
+mv old.txt new.txt
+mv path/to/catalog/myfile.txt path/to/catalog2
+</pre>
+                </article>
+            </section>
+
+
+            <section>
+                <h2>Поиск</h2>
+
+                <article aria-label="find">
+                    <h3>Найти файлы по заданным условиям</h3>
+
+                    <h4>find</h4>
+
+                    <p>
+                        <strong>find </strong> — утилита для поиска файлов и директорий в файловой системе. Позволяет
+                        рекурсивно
+                        обходить дерево каталогов, начиная с указанных точек, и находить объекты на основе
+                        разнообразных критериев: имени, размера, типа, времени модификации, прав доступа
+                        и многих других.
+                    </p>
+
+                    <p><strong>Синтаксис:</strong></p>
+                    <pre>find [КАТАЛОГ] [ПАРАМЕТРЫ] [КРИТЕРИЙ_ПОИСКА] [ПАТТЕРН] [ДЕЙСТВИЕ]</pre>
+
+                    <p>
+                        <code>[КАТАЛОГ]:</code> один или несколько каталогов, с которых начинается поиск
+                        (например, <code>.</code> — текущий каталог, <code>/</code> — корень файловой системы).
+                        Если каталог не указан, по умолчанию используется текущий каталог.
+                    </p>
+
+                    <p>
+
+                        Возможные значения <code>[ПАРАМЕТРЫ]</code> можно посмотреть в терминале, введя:
+                        <em>find --help</em>
+                    </p>
+
+                    <p>Возможные значения <code>[КРИТЕРИЙ_ПОИСКА]</code>:</p>
+
+                    <table border="1" cellpadding="6" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Критерий</th>
+                                <th>Описание</th>
+                                <th>Пример</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>-name pattern</code></td>
+                                <td>Имя файла соответствует шаблону (с учётом регистра, shell-глобы: <code>*</code>,
+                                    <code>?</code>)
+                                </td>
+                                <td><code>find . -name "*.txt"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>-path pattern</code></td>
+                                <td>Полный путь соответствует шаблону</td>
+                                <td><code>find /home -path "*/docs/*"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>-type t</code></td>
+                                <td>
+                                    Тип файла:<br>
+                                    <code>f</code> — файл,<br>
+                                    <code>d</code> — каталог,<br>
+                                    <code>l</code> — символическая ссылка,<br>
+                                    <code>b</code> — блочное устройство и т.д.
+                                </td>
+                                <td><code>find . -type f</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>-size n[ckMG]</code></td>
+                                <td>
+                                    Размер файла:<br>
+                                    <code>c</code> — байты,<br>
+                                    <code>k</code> — KiB,<br>
+                                    <code>M</code> — MiB,<br>
+                                    <code>G</code> — GiB;<br>
+                                    <code>+n</code> — больше n,<br>
+                                    <code>-n</code> — меньше n
+                                </td>
+                                <td><code>find . -size +100M</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>-mtime n</code></td>
+                                <td>
+                                    Время модификации в днях:<br>
+                                    <code>+n</code> — старше n дней,<br>
+                                    <code>-n</code> — моложе n дней
+                                </td>
+                                <td><code>find . -mtime +30</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>-mmin n</code></td>
+                                <td>Время модификации в минутах</td>
+                                <td><code>find . -mmin -60</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>-perm mode</code></td>
+                                <td>
+                                    Права доступа:<br>
+                                    точное совпадение (<code>644</code>) или<br>
+                                    <code>/mode</code> — любые из битов
+                                </td>
+                                <td><code>find . -perm 777</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>-user name</code></td>
+                                <td>Владелец файла</td>
+                                <td><code>find / -user root</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>-group name</code></td>
+                                <td>Группа файла</td>
+                                <td><code>find . -group users</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>-empty</code></td>
+                                <td>Пустой файл или каталог</td>
+                                <td><code>find . -empty</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>
+
+                        Возможные значения <code>[ПАТТЕРН]</code> и <code>[ДЕЙСТВИЕ]</code> можно посмотреть в
+                        терминале,
+                        введя:
+                        <code>find --help</code>
+                    </p>
+
+                    <p><strong>Примеры использования:</strong></p>
+                    <pre>
+find . -type f -name "*.txt"
+find . -type f -name "*.txt" > mydir/report.txt
+</pre>
+
+                    <p>
+                        Во втором примере результат работы команды <em>find</em> перенаправляется в файл
+                        <em>mydir/report.txt</em>.
+                    </p>
+                </article>
+                <article aria-label="grep">
+                    <h3>Найти строки в файле по шаблону</h3>
+                    <h4>grep</h4>
+                    <p><b>grep</b> — утилита командной строки, предназначенная для поиска строк, соответствующих
+                        заданному
+                        шаблону, в одном или нескольких файлах.</p>
+                    <p><strong>Синтаксис:</strong></p>
+                    <pre>grep [ПАРАМЕТРЫ] ШАБЛОН [ПУТЬ]</pre>
+                    <p>
+                        Возможные значения <code>[ПАРАМЕТРЫ]</code>:
+                    </p>
+                    <ul>
+                        <li><code>-i</code> — поиск строки без учёта регистра в указанном файле.</li>
+                        <li><code>-c</code> — нахождение количества строк, которые соответствуют заданному шаблону.</li>
+                        <li><code>-l</code> — отображение файлов, которые содержат заданную строку или шаблон.</li>
+                    </ul>
+                    <p><em>Здесь приведены не все параметры. Подробнее: grep --help</em></p>
+                    <p><code>ШАБЛОН</code> — строка или регулярное выражение, которое нужно найти.</p>
+                    <p><code>[ПУТЬ]</code> — имя одного или нескольких файлов, в которых необходимо выполнить поиск.
+                        Если
+                        указана папка, поиск выполняется рекурсивно.</p>
+                    <p><strong>Пример использования:</strong></p>
+                    <pre>grep "python" notes.txt
+# найдёт строки с подстрокой "python" в файле notes.txt
+</pre>
+
+                </article>
+            </section>
+            <section>
+                <h2>Удаление</h2>
+                <article aria-label="rm">
+                    <h3>Удалить файл и каталог</h3>
+                    <h4>rm</h4>
+                    <p><strong>Синтаксис:</strong></p>
+                    <pre>rm [ПАРАМЕТРЫ] ФАЙЛ</pre>
+                    <p>
+                        Возможные значения <code>[ПАРАМЕТРЫ]</code>:
+                    </p>
+                    <ul>
+                        <li><code>-f</code> — игнорировать ошибки и не запрашивать подтверждение удаления файлов. </li>
+                        <li><code>-r</code> — рекурсивное удаление каталогов и их содержимого. </li>
+                        <li><code>-i</code> — запрашивать подтверждение перед удалением каждого файла. </li>
+                        <li><code>-d</code> — удалять пустые каталоги. </li>
+                        <li><code>-v</code> — выводить информацию об удаляемых файлах.</li>
+
+                    </ul>
+                    <p><em>Здесь приведены не все параметры. Подробнее: rm --help</em></p>
+                    <p><code>ФАЙЛ</code> — путь к файлу или каталогу, который нужно удатить.</p>
+                    <p><strong>Пример использования:</strong></p>
+                    <pre>rm -rf testdir</pre>
+                </article>
+            </section>
+        </section>
+
+        <!-- 3 -->
+        <section>
+            <h2>3. Права доступа</h2>
+            <article aria-label="chmod">
+                <h3>Изменить права доступа</h3>
+                <h4>chmod</h4>
+                <p><strong>Синтаксис:</strong></p>
+                <pre>chmod [ПАРАМЕТРЫ] ПРАВА ФАЙЛЫ</pre>
+                <p>
+                    Возможные значения <code>[ПАРАМЕТРЫ]</code>:
+                </p>
+                <ul>
+                    <li><code>-R</code>, <code>--recursive</code> — рекурсивно изменять файлы и каталоги</li>
+                    <li><code>-f</code>, <code>--silent</code>, <code>--quiet</code> — не выводить большинство сообщений
+                        об ошибках</li>
+                    <li><code>-v</code>, <code>--verbose </code> — выводить диагностические сообщения по каждому файлу
+                    </li>
+
+                </ul>
+                <p><em>Здесь приведены не все параметры. Подробнее: chmod --help</em></p>
+                <p><code>ПРАВА</code> — новые права доступа, которые нужно установить для указанных файлов или
+                    каталогов.</p>
+                <p><code>ФАЙЛЫ</code> — список файлов или каталогов, для которых нужно изменить права доступа.</p>
+                <div class="warning">Обычный владелец файла может менять права на своих объектах. Для изменения прав
+                    чужих файлов команду нужно выполнять от имени суперпользователя (команда sudo)</div>
+
+                <p><strong>Примеры использования:</strong></p>
+                <pre>
+chmod u+rwx filename.py
+chmod 674 ~/directory
+</pre>
+            </article>
+
+
+        </section>
+
+        <!-- 4 -->
+        <section>
+            <h2>4. Пользователи и группы</h2>
+
+            <article aria-label="su">
+                <h3>Сменить пользователя</h3>
+                <h4>su</h4>
+                <p><strong>Синтаксис:</strong></p>
+                <pre>su [ПАРАМЕТРЫ] [-] [ИМЯ]</pre>
+                <p>
+                    <em> Возможные значения <code>[ПАРАМЕТРЫ]</code> можно посмотреть в
+                        терминале,
+                        введя:
+                        su --help</em>
+                </p>
+                <ul>
+                    <li><code>-</code> — запуск нового сеанса с окружением, как если бы пользователь только что вошёл в
+                        систему под этим пользователем.</li>
+
+                </ul>
+                <p><em>Здесь приведены не все параметры. Подробнее: su --help</em></p>
+                <p><code>[ИМЯ]</code> — имя пользователя, от имени которого будут выполняться команды.</p>
+                <p><strong>Пример использования:</strong></p>
+                <pre>
+su - linuxoid
+su student
+</pre>
+            </article>
+
+            <article aria-label="sudo">
+                <h3>Выполнить команду с правами суперпользователя</h3>
+                <h4>sudo</h4>
+                <p><strong>Синтаксис:</strong></p>
+                <pre>sudo [ПАРАМЕТРЫ] [КОМАНДА]</pre>
+                <p>
+                    <em> Возможные значения <code>[ПАРАМЕТРЫ]</code> можно посмотреть в
+                        терминале,
+                        введя:
+                        su --help</em>
+                </p>
+                <p><code>[КОМАНДА]</code> — любая команда, кторая должна быть выполнена с правами суперпользователя</p>
+                <p><strong>Пример использования:</strong></p>
+                <pre>sudo nano /etc/hosts</pre>
+            </article>
+
+            <article aria-label="chgrp">
+                <h3>Изменить группу для файлов и каталогов</h3>
+                <h4>chgrp</h4>
+                <p><strong>Синтаксис:</strong></p>
+                <pre>chgrp [ПАРАМЕТРЫ] ГРУППА ФАЙЛ</pre>
+                <p>
+                    Возможные значения <code>[ПАРАМЕТРЫ]</code> можно посмотреть, введя в терминале: chgrp --help
+                </p>
+                <p><code>ГРУППА</code> — название новой группы, которая будет назначена файлу.</p>
+                <p><code>ФАЙЛ</code> — имя файла, для которого меняется группа.</p>
+                <div class="warning">Обычный пользователь может менять группу только на ту, в которой состоит, и только
+                    для своих файлов. Для произвольных изменений команду нужно выполнять от имени суперпользователя
+                    (команда sudo)</div>
+
+                <p><strong>Пример использования:</strong></p>
+                <pre>sudo chgrp teacher file.txt</pre>
+            </article>
+
+            <article aria-label="chown">
+                <h3>Изменить владельца и группу для файлов и каталогов</h3>
+                <h4>chown</h4>
+                <p><strong>Синтаксис:</strong></p>
+                <pre>chown [ПАРАМЕТРЫ] [ИМЯ][:[ГРУППА]] ПУТЬ</pre>
+                <p>
+                    Возможные значения <code>[ПАРАМЕТРЫ]</code> можно посмотреть, введя в терминале: chown --help
+                </p>
+                <p><code>[ИМЯ]</code> — имя пользователя, которого нужно назначить владельцем</p>
+                <p><code>[:ГРУППА]</code> — название группы, которую нужно назначить файлу</p>
+                <p><code>[ПУТЬ]</code> — путь к файлу, для которого меняется владелец или группа</p>
+                <p>Некоторые особенности синтаксиса:</p>
+                <ul>
+                    <li><code>chown user file</code> — изменяет владельца файла или директории на указанного
+                        пользователя.</li>
+                    <li><code>chown user:group file</code> — изменяет владельца и группу файла или директории.</li>
+                    <li><code>chown :group file</code> — изменяет только группу файла или директории.</li>
+                </ul>
+                <div class="warning">бычный пользователь не может менять владельца (даже своих файлов на другого
+                    пользователя). Команду нужно выполнять от имени суперпользователя (команда sudo)</div>
+
+                <p><strong>Пример использования:</strong></p>
+                <pre>
+sudo chown user:group /path/to/file 
+# user новый владелец файла, а group — группа, которой этот файл будет принадлежать.
+sudo chown user /path/to/file 
+# такое изменение изменит владельца файла на user. Группа файла останется прежней</pre>
+            </article>
+
+            <article aria-label="usermod">
+                <h3>Изменить атрибуты учётной записи пользователя</h3>
+
+                <h4>usermod</h4>
+                <p><strong>Синтаксис:</strong></p>
+                <pre>usermod [ПАРАМЕТРЫ] ИМЯ</pre>
+
+                <p>Возможные значения <code>[ПАРАМЕТРЫ]:</code></p>
+                <ul>
+                    <li><code>-l</code> — изменение имени пользователя</li>
+                    <li><code>-g</code> — добавление пользователя в группу</li>
+                </ul>
+
+                <p><em>Здесь приведены не все параметры. Подробнее: usermod --help</em></p>
+
+                <p><code>[ИМЯ]</code> — имя пользователя, для которого применяются изменения.</p>
+                <div class="warning">Модификация учётной записи пользователя (например, смена группы, UID и т.д.). Почти
+                    всегда выполяется от имени суперпользователя (команда sudo)</div>
+
+                <p><strong>Примеры использования:</strong></p>
+                <pre>
+sudo usermod -l newusername oldusername
+sudo usermod -g newgroupname username</pre>
+            </article>
+
+            <article aria-label="passwd">
+                <h3>Управление паролями учётных записей</h3>
+
+                <h4>passwd</h4>
+
+                <p><strong>Назначение команды:</strong><br>
+                    Управляет паролями пользователей. Позволяет:
+                </p>
+                <ul>
+                    <li>изменять пароль текущего пользователя;</li>
+                    <li>изменять пароль другого пользователя (для администраторов);</li>
+                    <li>блокировать пароль;</li>
+                    <li>задавать срок действия пароля.</li>
+                </ul>
+
+                <p><strong>Синтаксис:</strong></p>
+                <pre>passwd [ПАРАМЕТРЫ] [ИМЯ]</pre>
+
+                <p>Возможные значения <code>[ПАРАМЕТРЫ]:</code></p>
+                <ul>
+                    <li><code>-d</code>, <code>--delete</code> — удалить пароль пользователя</li>
+                    <li><code>-l</code>, <code>--lock</code> — заблокировать пароль пользователя</li>
+                    <li><code>-n</code>, <code>--mindays MIN_DAYS</code> — минимальное число дней между сменами пароля
+                    </li>
+                </ul>
+                <p><em>Здесь приведены не все параметры. Подробнее: passwd --help</em></p>
+                <p><code>[ИМЯ]</code> — имя пользователя, для которого выполняются действия.</p>
+                <div class="warning">Обычный пользователь может изменить только свой пароль. Для смены пароля другого
+                    пользователя команду нужно выполнять от имени суперпользователя (команда sudo) </div>
+
+                <p><strong>Пример использования:</strong></p>
+                <pre>
+passwd user</pre>
+            </article>
+
+            <article aria-label="adduser">
+                <h3>Добавление нового пользователя</h3>
+
+                <h4>adduser</h4>
+
+                <p><strong>Назначение команды:</strong><br>
+                    Создаёт нового пользователя и автоматически настраивает его окружение
+                    (домашний каталог, группу, пароль).
+                </p>
+
+                <p><strong>Синтаксис:</strong></p>
+                <pre>adduser [ПАРАМЕТРЫ] ИМЯ</pre>
+
+                <p>Возможные значения<code> [ПАРАМЕТРЫ]:</code></p>
+                <ul>
+                    <li><code>--home DIR</code> — указать домашнюю директорию пользователя</li>
+                    <li><code>--no-create-home</code> — не создавать домашний каталог</li>
+                    <li><code>--disabled-login</code> — запретить вход пользователя</li>
+                </ul>
+
+                <p><em>Здесь приведены не все параметры. Подробнее: adduser --help</em></p>
+                </p>
+
+                <p><code>[ИМЯ]</code> — имя создаваемого пользователя.</p>
+                <div class="warning">Создание нового пользователя всегда выполяется от имени суперпользователя (команда
+                    sudo)</div>
+
+                <p><strong>Пример использования:</strong></p>
+                <pre>
+sudo adduser testuser</pre>
+            </article>
+
+            <article aria-label="groupadd">
+                <h3>Добавление новой группы</h3>
+
+                <h4>groupadd</h4>
+
+                <p><strong>Синтаксис:</strong></p>
+                <pre>groupadd [ПАРАМЕТРЫ] ГРУППА</pre>
+
+                <p>Возможные значения<code> [ПАРАМЕТРЫ]:</code></p>
+                <ul>
+                    <li><code>-p ПАРОЛЬ</code>, <code>--password ПАРОЛЬ</code> — применяет пароль для новой группы</li>
+                    <li><code>-U ПОЛЬЗОВАТЕЛИ</code>, <code>--users ПОЛЬЗОВАТЕЛИ</code> — задаёт список
+                        пользователей-членов группы
+                    </li>
+                    <li><code>-f</code>, <code>--force</code> — не выдаёт ошибку, если группа уже существует</li>
+                </ul>
+
+                <p><em>Здесь приведены не все параметры. Подробнее: groupadd --help</em></p>
+
+                <p><code>ГРУППА</code> — имя создаваемой группы.</p>
+                <div class="warning">Создание новой группы всегда выполяется от имени суперпользователя (команда sudo)
+                </div>
+
+                <p><strong>Примеры использования:</strong></p>
+                <pre>
+sudo groupadd teacher
+sudo groupadd teacher -U testuser</pre>
+            </article>
+
+            <article aria-label="exit">
+                <h3>Завершить текущий сеанс командной строки</h3>
+                <h4>exit</h4>
+                <p><strong>Синтаксис:</strong></p>
+                <pre>exit</pre>
+            </article>
+        </section>
+
+        <!-- 5 -->
+        <section>
+            <h2>5. Управление пакетами</h2>
+
+            <article aria-label="apt">
+                <h3>Управление пакетами</h3>
+                <h4>apt</h4>
+
+                <p><b>Advanced Package Tool (APT) </b>— утилита командной строки для управления программными пакетами в
+                    дистрибутивах Linux на базе Debian (например, Ubuntu, Linux Mint).</p>
+
+                <p><strong>Синтаксис:</strong></p>
+                <pre>apt КОМАНДА [ПАРАМЕТРЫ]</pre>
+                <ul>
+                    <li><code>sudo apt update</code> Обновление баз данных пакетов (указанных в/etc/apt/sources.list)
+                    </li>
+                    <li><code>sudo apt upgrade</code> Обновление системы</li>
+                    <li><code>sudo apt search ПАКЕТ</code> Поиск пакетов</li>
+                    <li><code>sudo apt search ^ПАКЕТ</code> Поиск пакетов по регулярному выражению</li>
+                    <li><code>sudo apt show ПАКЕТ</code> Поиск пакетов и выводит информацию о пакете</li>
+                    <li><code>sudo apt install ПАКЕТ</code> Установить пакет</li>
+                    <li><code>sudo apt purge ПАКЕТ</code> Удалить пакет и его конфигурационные файлы. Возможно
+                        использовать для уже удаленного пакета.</li>
+                    <li><code>sudo apt remove ПАКЕТ</code> Удалить пакет</li>
+                    <li><code>sudo apt autoremove</code> Удаление всех пакетов-сирот</li>
+                    <li><code>sudo apt autoclean</code> Очистка кэша неустановленных пакетов</li>
+                    <li><code>sudo apt clean </code> Очистка кэша пакетов</li>
+                </ul>
+                <p><code>ПАКЕТ</code> — название программного пакета, для которого требуется выполнить действие.</p>
+                <p><em>Более полный список команд можно получить, введя в терминале: apt --help</em></p>
+                <p><strong>Примеры использования:</strong></p>
+                <pre>
+sudo apt update
+sudo apt upgrade
+sudo apt install geany
+</pre>
+            </article>
+
+
+            <article aria-label="which">
+                <h3>Найти путь к исполняемому файлу</h3>
+                <h4>which</h4>
+                <p><strong>Синтаксис:</strong></p>
+                <pre>which [ПАРАМЕТРЫ] КОМАНДА</pre>
+                <p>
+                    Возможные значения <code>[ПАРАМЕТРЫ]</code> можно посмотреть, введя в терминале: info which (для
+                    выхода нажмите q)
+                </p>
+                <p><code>КОМАНДА</code> — имя команды или исполняемого файла, который нужно найти.</p>
+                <p><strong>Пример использования:</strong></p>
+                <pre>which ls
+# выводит абсолютный путь к исполняемому файлу команды ls, 
+# который обычно находится по адресу /usr/bin/ls</pre>
+
+            </article>
+        </section>
+
+        <!-- 6 -->
+        <section>
+            <h2>6. Ссылки</h2>
+
+            <article aria-label="ln">
+                <h3>Создание жёстких и символьных ссылок</h3>
+                <h4>ln</h4>
+                <p><b>Жёсткие</b> ссылки создаются с помощью команды ln без дополнительных опций. По сути, это копии
+                    исходного
+                    файла, но они используют один и тот же inode (метаданные файла) и физическое место хранения.
+                    Изменения в содержимом файла отражаются во всех жёстких ссылках.</p>
+                <p><b>Символьные</b> (мягкие) ссылки создаются с помощью опции -s вместе с командой ln. Это указатели
+                    на
+                    исходный файл или директорию, они содержат путь к целевому объекту.</p>
+                <p><strong>Синтаксис:</strong></p>
+                <pre>ln [ПАРАМЕТРЫ] ИСТОЧНИК НАЗНАЧЕНИЕ</pre>
+                <p>
+                    Возможные значения <code>[ПАРАМЕТРЫ]</code>:
+                </p>
+                <ul>
+                    <li><code>-s</code> — создаёт символическую ссылку</li>
+                    <li><code>-f</code> — аставляет команду перезаписать уже существующий файл</li>
+                </ul>
+                <p><em>Здесь приведены не все параметры. Подробнее: ln --help</em></p>
+                <p><code>ИСТОЧНИК</code> — файл или каталог, на который делается ссылка.</p>
+                <p><code>НАЗНАЧЕНИЕ</code> — место для сохранения ссылки — если это поле не заполнено, символическая
+                    ссылка сохраняется в текущем рабочем каталоге.</p>
+                <p><strong>Пример использования:</strong></p>
+                <pre>
+ln file link
+ln -s file symlink
+</pre>
+            </article>
+        </section>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const articles = document.querySelectorAll('article');
+
+            articles.forEach(article => {
+                const header = article.querySelector('h3');
+                const header2 = article.querySelector('h4');
+                if (!header) return; // если h4 нет — пропускаем article
+
+                // Создаём контейнер для скрываемого контента
+                const contentWrapper = document.createElement('div');
+                contentWrapper.classList.add('accordion-content');
+
+                // Переносим всё, кроме h4, внутрь wrapper
+                Array.from(article.children).forEach(child => {
+                    if (child !== header && child !== header2) {
+                        contentWrapper.appendChild(child);
+                    }
+                });
+
+                article.appendChild(contentWrapper);
+
+                // Добавляем класс и стрелку
+                header.classList.add('accordion-header');
+                header.setAttribute('data-open', 'false');
+
+                // Клик по заголовку
+                header.addEventListener('click', () => {
+                    const isOpen = header.getAttribute('data-open') === 'true';
+                    header.setAttribute('data-open', String(!isOpen));
+                    contentWrapper.classList.toggle('open', !isOpen);
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>
