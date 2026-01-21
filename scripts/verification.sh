@@ -1,4 +1,6 @@
 #!/bin/bash
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Kristina Doga
 set -euo pipefail
 
 # Файл отчёта
