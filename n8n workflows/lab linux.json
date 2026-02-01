@@ -12,10 +12,10 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        2432,
-        -400
+        2704,
+        544
       ],
-      "id": "ae26f921-2d3f-41c1-aa11-483f89105cb3",
+      "id": "06f11f93-0501-4ffc-ac0c-f6685aa69668",
       "name": "Запись о превышении лимита",
       "alwaysOutputData": false
     },
@@ -26,10 +26,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3328,
-        -560
+        3600,
+        384
       ],
-      "id": "3c38e203-60b7-4996-8981-0c68770e1204",
+      "id": "bcd700b1-6584-4357-832a-ca019ae74be3",
       "name": "дата"
     },
     {
@@ -39,10 +39,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3328,
-        -752
+        3600,
+        192
       ],
-      "id": "af8fe073-1fd3-4c12-9011-d3ac252a95f6",
+      "id": "b400ab94-2db4-48e6-bdc8-efa023d872c1",
       "name": "отметка и дата"
     },
     {
@@ -52,10 +52,10 @@
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
       "position": [
-        2208,
-        -752
+        2480,
+        192
       ],
-      "id": "fecab2f6-b38d-413a-91df-b737765f3433",
+      "id": "4c576b1b-7615-4a58-addd-6ce7274de70a",
       "name": "похожие файлы"
     },
     {
@@ -65,10 +65,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        192,
-        -560
+        464,
+        384
       ],
-      "id": "30bbeb50-3110-443d-b0cc-e31daa69eb6b",
+      "id": "1c598f3d-523f-4fc0-b50b-0e5f1d33276e",
       "name": "Имя студента"
     },
     {
@@ -79,10 +79,10 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        640,
-        -560
+        912,
+        384
       ],
-      "id": "c3e78d38-8d26-46dd-8c05-ad8064940460",
+      "id": "4408d93b-8125-4a0e-a893-0014da2b3e8d",
       "name": "Извлекаем из него данные"
     },
     {
@@ -93,10 +93,10 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        416,
-        -560
+        688,
+        384
       ],
-      "id": "c73fde87-0a84-484f-b957-276332d80c63",
+      "id": "98e9c682-e9e0-4683-8e96-c37f2f451028",
       "name": "читаем all_students.json"
     },
     {
@@ -107,10 +107,10 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        1312,
-        -400
+        1584,
+        544
       ],
-      "id": "327c3efa-a35e-46c8-88f7-d736eb8f98b2",
+      "id": "79bc0ca5-8ff8-4e3a-a159-c1004af7cc2c",
       "name": "читаем exceeded_limit"
     },
     {
@@ -121,10 +121,10 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        1536,
-        -400
+        1808,
+        544
       ],
-      "id": "e0a665a8-cfb7-4fd8-a3dd-609f11a9a667",
+      "id": "8d41c0e1-7064-4e3a-9d18-b549526d7fe0",
       "name": "Извлекаем данные"
     },
     {
@@ -154,10 +154,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1760,
-        -400
+        2032,
+        544
       ],
-      "id": "c2899d38-1281-4384-809d-e915fdeef37d",
+      "id": "d83e8fce-4da3-47eb-9876-7d15672ac4cb",
       "name": "Студент ещё не превышал лимит?"
     },
     {
@@ -167,10 +167,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1984,
-        -400
+        2256,
+        544
       ],
-      "id": "7a814395-e26d-4756-9911-d22b057f717d",
+      "id": "ed5cf95d-64a0-48fe-94bf-0b5c4e1871c4",
       "name": "Формируем строку"
     },
     {
@@ -182,10 +182,10 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        2208,
-        -400
+        2480,
+        544
       ],
-      "id": "c8de4e14-3b51-46ee-a2e4-6f3f0f0cd8ae",
+      "id": "8685f5a6-3a7b-4d53-9ac8-6dccdd8bd3af",
       "name": "конвертируем"
     },
     {
@@ -196,10 +196,10 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        1312,
-        -656
+        1584,
+        288
       ],
-      "id": "977edaa0-fc68-49f4-afc2-93fd96e1a09f",
+      "id": "9ead4689-a63e-4e6b-a4cb-13b8ba46dd8b",
       "name": "читаем reports"
     },
     {
@@ -229,10 +229,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1088,
-        -560
+        1360,
+        384
       ],
-      "id": "5e572bf0-3bac-450f-8bd6-f521f01202f4",
+      "id": "f7424471-fc20-4a24-bfac-8c45cd63430c",
       "name": "Ещё в рамках лимита?"
     },
     {
@@ -263,10 +263,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1984,
-        -656
+        2256,
+        288
       ],
-      "id": "1c48c81b-6c6a-4731-928c-e4ed4ab497e6",
+      "id": "049fb1df-1573-401d-a83b-35d5194d50a5",
       "name": "Сдано?"
     },
     {
@@ -276,10 +276,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        864,
-        -560
+        1136,
+        384
       ],
-      "id": "f70a6cd2-d659-4260-b311-435dff4dcd51",
+      "id": "ddabc963-a295-4f19-9cc6-68b161af349e",
       "name": "Поиск или добавление студента"
     },
     {
@@ -290,10 +290,10 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        1536,
-        -656
+        1808,
+        288
       ],
-      "id": "1f61150b-1122-4ffb-bd70-34172a34e065",
+      "id": "f6323099-af9a-44ca-9126-3c7b0b2c55be",
       "name": "Извлечение данных"
     },
     {
@@ -303,10 +303,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1760,
-        -656
+        2032,
+        288
       ],
-      "id": "5cb4eb4d-c8d0-4b60-acd8-d1f25c1f9421",
+      "id": "8fa75622-94ef-4209-920e-1686a2b9d4e6",
       "name": "Анализ отчета"
     },
     {
@@ -324,16 +324,16 @@
       "type": "n8n-nodes-base.localFileTrigger",
       "typeVersion": 1,
       "position": [
-        -32,
-        -560
+        240,
+        384
       ],
-      "id": "88955e2f-72bf-4ed3-b25d-1ba14352f4fa",
+      "id": "d9a872d3-59d2-46fa-8deb-7bf668bc1b5b",
       "name": "Триггер: изменение/добавление файла"
     },
     {
       "parameters": {
         "fromEmail": "n8n.lab@yandex.ru",
-        "toEmail": "doga-tina.123@yandex.ru",
+        "toEmail": "<Ваша почта>",
         "subject": "n8n Лабы по linux",
         "html": "=Студент {{ $('Имя студента').item.json.fio }} не уложился в 10 попыток",
         "options": {}
@@ -341,18 +341,12 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        2656,
-        -400
+        2928,
+        544
       ],
-      "id": "2f6b6e61-b303-4e58-931f-307faddf426a",
+      "id": "5cc14be1-36a2-424a-87e4-ddf093cf9739",
       "name": "Отправляем отчет преподавателю",
-      "webhookId": "82c3cafc-2cc0-4130-8a5c-d8274b0661db",
-      "credentials": {
-        "smtp": {
-          "id": "cS4mmkDO4GAtw6bC",
-          "name": "SMTP n8n.lab"
-        }
-      }
+      "webhookId": "82c3cafc-2cc0-4130-8a5c-d8274b0661db"
     },
     {
       "parameters": {
@@ -362,10 +356,10 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        2656,
-        -752
+        2928,
+        192
       ],
-      "id": "8db662c3-6e2e-4641-878f-3292701b868e",
+      "id": "6adb1973-b434-4ec6-86d4-a526b75fd58f",
       "name": "Чтение файлов"
     },
     {
@@ -375,10 +369,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2432,
-        -752
+        2704,
+        192
       ],
-      "id": "3c8e7c2b-e2ca-4427-a7c7-531aca20333a",
+      "id": "90fd497f-ce7e-4e1d-a4c7-ad5ce3b37ec8",
       "name": "Разбиение данных о похожих файлах"
     },
     {
@@ -388,16 +382,16 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2880,
-        -752
+        3152,
+        192
       ],
-      "id": "f2d045c9-a288-4e66-b801-cf2876ed0ab5",
+      "id": "06986ce9-ebcc-4069-9719-b9517feaeb30",
       "name": "Объединение данных о похожих файлах"
     },
     {
       "parameters": {
         "fromEmail": "n8n.lab@yandex.ru",
-        "toEmail": "doga-tina.123@yandex.ru",
+        "toEmail": "<Ваша почта>",
         "subject": "n8n Лабы по linux",
         "emailFormat": "text",
         "text": "=Студент {{ $('Имя студента').first().json.fio }} сдал лабораторную работу.\nОставшихся попыток: {{ $('Ещё в рамках лимита?').first().json.tryLeft - 1 }}\nПрилагаются:\n1 Файл с историей команд студента {{ $('Имя студента').first().json.fio }}\n2 Файлы историй с похожим содержимым, если таковые нашлись",
@@ -409,18 +403,12 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        3104,
-        -752
+        3376,
+        192
       ],
-      "id": "6eefd718-e111-4a53-b854-42ec6dcd65a8",
+      "id": "21076b6c-9ecd-400a-92db-f5e53d5c6b94",
       "name": "Отправка отчета преподавателю",
-      "webhookId": "82c3cafc-2cc0-4130-8a5c-d8274b0661db",
-      "credentials": {
-        "smtp": {
-          "id": "cS4mmkDO4GAtw6bC",
-          "name": "SMTP n8n.lab"
-        }
-      }
+      "webhookId": "82c3cafc-2cc0-4130-8a5c-d8274b0661db"
     },
     {
       "parameters": {
@@ -431,10 +419,10 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        3552,
-        -656
+        3824,
+        288
       ],
-      "id": "7503c5d1-0f7c-4548-8da4-35a934337f75",
+      "id": "2c62a5d6-6d08-42e8-830c-5b73f949d238",
       "name": "конвертируем в файл"
     },
     {
@@ -446,10 +434,10 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        3776,
-        -656
+        4048,
+        288
       ],
-      "id": "7463ec36-797b-4b8c-9be8-de2deb19c87e",
+      "id": "3a79a850-9150-4760-8a50-4455ecf08c24",
       "name": "перезаписываем all_students.json"
     }
   ],
@@ -678,11 +666,6 @@
         ]
       ]
     },
-    "Отправляем отчет преподавателю": {
-      "main": [
-        []
-      ]
-    },
     "Чтение файлов": {
       "main": [
         [
@@ -739,16 +722,16 @@
       ]
     }
   },
-  "active": false,
+  "active": true,
   "settings": {
     "executionOrder": "v1",
-    "callerPolicy": "workflowsFromSameOwner"
+    "availableInMCP": false
   },
-  "versionId": "460c8c65-e78b-4f05-807f-50ad63f7c0d2",
+  "versionId": "bbcd3087-69b2-4290-8338-566f7683de2a",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "cd6007d2328d9b1a3333547bfac96a50fbb1d4d232f62fc5d8b38233c6f91e5d"
+    "instanceId": "d495a9dddcfb990a3b3754a1ce9debf464a9f0f3a1105ef5bd008e16aa96d411"
   },
-  "id": "JfSN40MoBfr2cpgP",
+  "id": "WryoVEcdV22T3H0i",
   "tags": []
 }

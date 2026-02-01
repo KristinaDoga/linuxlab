@@ -5,14 +5,16 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-SSHD_CFG="/etc/ssh/ssh_config"
 USER="admeen"
 SSH_FILE_NAME="lab_checker"
 KEY_FILE="/home/$USER/.ssh/$SSH_FILE_NAME"
 AUTH_KEYS="/home/$USER/.ssh/authorized_keys"
-CMD_RESTRICT='command="/home/admeen/scripts/on_connect_ssh.sh",no-pty,no-port-forwarding,no-agent-forwarding,no-X11-forwarding'
-KEY_FILE="/home/$USER/.ssh/$SSH_FILE_NAME"
-CLIENT_FILE="./client.sh"
+CMD_RESTRICT="command=\"/home/$USER/scripts/on_connect_ssh.sh\",no-pty,no-port-forwarding,no-agent-forwarding,no-X11-forwarding"
+
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+CLIENT_FILE="$SCRIPT_DIR/client.sh"
+
+
 
 # 1. Заходим под пользователем admeen
 echo "[1] Проверка пользователя $USER..."
@@ -21,7 +23,12 @@ if ! id "$USER" >/dev/null 2>&1; then
     echo "Пользователь $USER не найден! Создаём..."
     sudo adduser --gecos "" "$USER"
     sudo usermod -aG sudo "$USER"
-    sudo usermod -aG docker "$USER"
+    if getent group docker >/dev/null 2>&1; then
+        echo "Добавляем $USER в группу docker..."
+        sudo usermod -aG docker "$USER"
+    else
+    echo "Группа docker не существует — пропускаем добавление пользователя."
+fi
     echo "Пользователь $USER создан и добавлен в группы: sudo, docker."
 else
     echo "Пользователь $USER существует. Проверяем группы..."
@@ -33,13 +40,18 @@ else
         sudo usermod -aG sudo "$USER"
     fi
 
-    # проверяем docker
+# проверяем docker
+if getent group docker >/dev/null 2>&1; then
     if id -nG "$USER" | grep -qw "docker"; then
         echo "Пользователь $USER уже в группе docker."
     else
         echo "Добавляем $USER в группу docker..."
         sudo usermod -aG docker "$USER"
     fi
+else
+    echo "Группа docker не существует — пропускаем добавление пользователя."
+fi
+
 fi
 
 
@@ -56,9 +68,20 @@ fi
 
 
 # 3. Запись публичного ключа в authorized_keys с ограничением
-PUB_KEY=$(sudo cat ${KEY_FILE}.pub)
+
+sudo mkdir -p "$(dirname "$AUTH_KEYS")" 
+sudo touch "$AUTH_KEYS" 
+sudo chown "$USER:$USER" "$AUTH_KEYS" 
+sudo chmod 600 "$AUTH_KEYS"
+
+PUB_KEY=$(sudo cat "${KEY_FILE}.pub")
 echo "[3] Настройка authorized_keys..."
-echo "${CMD_RESTRICT} ${PUB_KEY}" | sudo tee "$AUTH_KEYS" >/dev/null
+LINE="${CMD_RESTRICT} ${PUB_KEY}"
+
+if ! sudo grep -Fqx "$LINE" "$AUTH_KEYS" 2>/dev/null; then
+    echo "$LINE" | sudo tee -a "$AUTH_KEYS" >/dev/null
+fi
+
 sudo chown $USER:$USER "$AUTH_KEYS"
 sudo chmod 600 "$AUTH_KEYS"
 
@@ -83,7 +106,7 @@ INSERTED=0
 # Флаг пропуска старого блока
 SKIP_BLOCK=0
 
-while IFS= read -r line; do
+while IFS= read -r line || [[ -n "$line" ]]; do
     # Если это начало старого блока, пропускаем
     if [[ $line =~ ^PRIVATE_KEY_FILE= ]]; then
         SKIP_BLOCK=1
@@ -118,17 +141,23 @@ mv "$TMP_CLIENT" "$CLIENT_FILE"
 
 echo "[4] client.sh обновлён."
 
+
+
 # Создаем структуру для корректной работы скриптов
-cp run_log.txt /home/admeen/
-cp worklab.zip /home/admeen/
-mkdir -p /home/admeen/verification/histories
-mkdir -p /home/admeen/verification/reports
-touch /home/admeen/verification/all_students.json
-touch /home/admeen/verification/exceeded_limit.txt
-cp -r scripts /home/admeen
-chmod +x /home/admeen/scripts/on_connect_ssh.sh
-chmod +x /home/admeen/scripts/run_verification.sh
-chmod +x /home/admeen/scripts/verification.sh
-chown -R admeen:admeen /home/admeen
-sudo usermod -aG admeen root
+cp "$SCRIPT_DIR/worklab.zip" /home/$USER/
+touch /home/$USER/run_log.txt
+mkdir -p /home/$USER/verification/histories
+mkdir -p /home/$USER/verification/reports
+touch /home/$USER/verification/all_students.json
+touch /home/$USER/verification/exceeded_limit.txt
+mkdir -p /home/$USER/scripts
+cp -r "$SCRIPT_DIR/scripts/"* /home/$USER/scripts/
+chmod +x /home/$USER/scripts/on_connect_ssh.sh
+chmod +x /home/$USER/scripts/run_verification.sh
+chmod +x /home/$USER/scripts/verification.sh
+chown -R "$USER:$USER" "/home/$USER"
+chmod 770 /home/admeen/verification
+
 echo "=== Готово! ==="
+
+

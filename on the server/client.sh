@@ -1,29 +1,26 @@
 #!/bin/bash
 # SPDX-License-Identifier: MIT
 # Copyright (c) 2026 Kristina Doga
+
 set -euo pipefail
-IFS=$'\n\t'
-
-PRIVATE_KEY_FILE="lab_checker"
-PRIVATE_KEY_CONTENT='''
------BEGIN OPENSSH PRIVATE KEY-----
-b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
-AAAECTsGxJj0prFqUh/SdIUTR1aP/SAjk/WIzaLIFM1X8rj4/sNLM3NgPq6M/XrF2HKoAw
-Cwxemwn29nBC9lj3zkhAAAAAEWFkbWVlbkBxbHNqcXVyenN1AQIDBA==
------END OPENSSH PRIVATE KEY-----
-'''
-
-
-
 
 # ======================================
 # 1. Тут после запуска server.sh будут PRIVATE_KEY_FILE 
 # и PRIVATE_KEY_CONTENT с реальным именем и ключом
 # ======================================
+
+IFS=$'\n\t'
+PRIVATE_KEY_FILE="lab_checker"
+PRIVATE_KEY_CONTENT='''
+-----BEGIN OPENSSH PRIVATE KEY-----
+...
+-----END OPENSSH PRIVATE KEY-----
+'''
+
 USERNAME="linuxoid"
 HOME="/home/linuxoid"
 LAB_DIR="$HOME"
-SERVER="admeen@45.144.179.139"
+SERVER="username@serverip"
 PRIVATE_KEY_PATH="$HOME/.ssh/$PRIVATE_KEY_FILE"
 
 # ======================================
@@ -71,14 +68,11 @@ mkdir -p .ssh
 chmod 700 .ssh
 cd .ssh
 
-if [ ! -f "$PRIVATE_KEY_FILE" ]; then
-    cat > "$PRIVATE_KEY_FILE" <<KEYEOF$PRIVATE_KEY_CONTENT
+cat > "$PRIVATE_KEY_FILE" <<KEYEOF$PRIVATE_KEY_CONTENT
 KEYEOF
-    chmod 600 "$PRIVATE_KEY_FILE"
-    echo "Приватный ключ создан."
-else
-    echo "Приватный ключ уже существует."
-fi
+chmod 600 "$PRIVATE_KEY_FILE"
+echo "Приватный ключ создан."
+ 
 EOF
 
 mkdir -p "$LAB_DIR"

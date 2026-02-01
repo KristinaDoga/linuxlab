@@ -8,17 +8,11 @@
       "type": "n8n-nodes-base.emailReadImap",
       "typeVersion": 2.1,
       "position": [
-        -1728,
-        400
+        0,
+        0
       ],
-      "id": "2454eaa9-da60-4662-8e83-8275e5275a38",
-      "name": "Триггер (IMAP): письмо на настроенную почту",
-      "credentials": {
-        "imap": {
-          "id": "gb56CRzg50sH6wLD",
-          "name": "IMAP n8n.lab"
-        }
-      }
+      "id": "8eda293e-94ac-4135-8a61-f170ee688a5e",
+      "name": "Триггер (IMAP): письмо на настроенную почту"
     },
     {
       "parameters": {
@@ -56,10 +50,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -1504,
-        400
+        224,
+        0
       ],
-      "id": "9664951a-1259-41e1-924c-bb9a077bb087",
+      "id": "ad9c9017-0c06-4e27-8df8-3984ac5e842c",
       "name": "Проверка отправителя и содержимого"
     },
     {
@@ -70,10 +64,10 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        -1280,
-        400
+        448,
+        0
       ],
-      "id": "41b8cfd1-ad58-4c8e-8799-b29d2da743fe",
+      "id": "614196ae-b9fa-42f3-8af3-cf52f2985d1f",
       "name": "читаем all_students.json"
     },
     {
@@ -84,10 +78,10 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        -1056,
-        400
+        672,
+        0
       ],
-      "id": "96973432-bad1-49fc-b0dd-12100f83170c",
+      "id": "93b683d3-858f-4546-ac42-e1c934428755",
       "name": "Извлекаем из него данные"
     },
     {
@@ -97,16 +91,16 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -832,
-        400
+        896,
+        0
       ],
-      "id": "a7581a6b-3bd7-4010-9b6c-286a6b5e2d14",
+      "id": "b27df0b2-da00-4f48-8b00-233c7d92cc7b",
       "name": "Конвертируем в csv"
     },
     {
       "parameters": {
         "fromEmail": "n8n.lab@yandex.ru",
-        "toEmail": "doga-tina.123@yandex.ru",
+        "toEmail": "<Ваша почта>",
         "subject": "n8n Лабы по linux",
         "emailFormat": "text",
         "text": "Сводка по всем студентам",
@@ -117,18 +111,12 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        -608,
-        400
+        1120,
+        0
       ],
-      "id": "f5232ed9-ae72-4163-b247-f9ca62719ad1",
+      "id": "ec232b6b-9f92-4770-a7bd-25f16506f9ce",
       "name": "Отправить отчет преподавателю",
-      "webhookId": "82c3cafc-2cc0-4130-8a5c-d8274b0661db",
-      "credentials": {
-        "smtp": {
-          "id": "cS4mmkDO4GAtw6bC",
-          "name": "SMTP n8n.lab"
-        }
-      }
+      "webhookId": "82c3cafc-2cc0-4130-8a5c-d8274b0661db"
     }
   ],
   "pinData": {},
@@ -193,11 +181,9 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "3750cb3b-54c8-469f-aa2d-7b4464b47491",
+  "versionId": "",
   "meta": {
-    "templateCredsSetupCompleted": true,
-    "instanceId": "cd6007d2328d9b1a3333547bfac96a50fbb1d4d232f62fc5d8b38233c6f91e5d"
+    "instanceId": "d495a9dddcfb990a3b3754a1ce9debf464a9f0f3a1105ef5bd008e16aa96d411"
   },
-  "id": "wVdrWzZAAoAXAhda",
   "tags": []
 }
